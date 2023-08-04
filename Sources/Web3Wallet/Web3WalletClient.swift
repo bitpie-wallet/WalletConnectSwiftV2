@@ -87,37 +87,47 @@ public class Web3WalletClient {
     /// - Parameters:
     ///   - proposalId: Session Proposal id
     ///   - namespaces: namespaces for given session, needs to contain at least required namespaces proposed by dApp.
-    public func approve(proposalId: String, namespaces: [String: SessionNamespace], sessionProperties: [String: String]? = nil) async throws {
-        try await signClient.approve(proposalId: proposalId, namespaces: namespaces, sessionProperties: sessionProperties)
+    public func approve(proposalId: String, namespaces: [String: SessionNamespace], sessionProperties: [String: String]? = nil) throws {
+        Task {
+            try await signClient.approve(proposalId: proposalId, namespaces: namespaces, sessionProperties: sessionProperties)
+        }
     }
 
     /// For the wallet to reject a session proposal.
     /// - Parameters:
     ///   - proposalId: Session Proposal id
     ///   - reason: Reason why the session proposal has been rejected. Conforms to CAIP25.
-    public func reject(proposalId: String, reason: RejectionReason) async throws {
-        try await signClient.reject(proposalId: proposalId, reason: reason)
+    public func reject(proposalId: String, reason: RejectionReason) throws {
+        Task {
+            try await signClient.reject(proposalId: proposalId, reason: reason)
+        }
     }
     
     /// For wallet to reject authentication request
     /// - Parameter requestId: authentication request id
-    public func reject(requestId: RPCID) async throws {
-        try await authClient.reject(requestId: requestId)
+    public func reject(requestId: RPCID) throws {
+        Task {
+            try await authClient.reject(requestId: requestId)
+        }
     }
 
     /// For the wallet to update session namespaces
     /// - Parameters:
     ///   - topic: Topic of the session that is intended to be updated.
     ///   - namespaces: Dictionary of namespaces that will replace existing ones.
-    public func update(topic: String, namespaces: [String: SessionNamespace]) async throws {
-        try await signClient.update(topic: topic, namespaces: namespaces)
+    public func update(topic: String, namespaces: [String: SessionNamespace]) throws {
+        Task {
+            try await signClient.update(topic: topic, namespaces: namespaces)
+        }
     }
 
     /// For wallet to extend a session to 7 days
     /// - Parameters:
     ///   - topic: Topic of the session that is intended to be extended.
-    public func extend(topic: String) async throws {
-        try await signClient.extend(topic: topic)
+    public func extend(topic: String) throws {
+        Task {
+            try await signClient.extend(topic: topic)
+        }
     }
     
     /// For the wallet to respond on pending dApp's JSON-RPC request
@@ -125,8 +135,10 @@ public class Web3WalletClient {
     ///   - topic: Topic of the session for which the request was received.
     ///   - requestId: RPC request ID
     ///   - response: Your JSON RPC response or an error.
-    public func respond(topic: String, requestId: RPCID, response: RPCResult) async throws {
-        try await signClient.respond(topic: topic, requestId: requestId, response: response)
+    public func respond(topic: String, requestId: RPCID, response: RPCResult) throws {
+        Task {
+            try await signClient.respond(topic: topic, requestId: requestId, response: response)
+        }
     }
     
     /// For the wallet to emit an event to a dApp
@@ -140,8 +152,10 @@ public class Web3WalletClient {
     ///   - topic: Session topic
     ///   - event: session event
     ///   - chainId: CAIP-2 chain
-    public func emit(topic: String, event: Session.Event, chainId: Blockchain) async throws {
-        try await signClient.emit(topic: topic, event: event, chainId: chainId)
+    public func emit(topic: String, event: Session.Event, chainId: Blockchain) throws {
+        Task {
+            try await signClient.emit(topic: topic, event: event, chainId: chainId)
+        }
     }
     
     /// For wallet to receive a session proposal from a dApp
@@ -151,12 +165,16 @@ public class Web3WalletClient {
     /// Should Error:
     /// - When URI has invalid format or missing params
     /// - When topic is already in use
-    public func pair(uri: WalletConnectURI) async throws {
-        try await pairingClient.pair(uri: uri)
+    public func pair(uri: WalletConnectURI) throws {
+        Task {
+            try await pairingClient.pair(uri: uri)
+        }
     }
 
-    public func disconnectPairing(topic: String) async throws {
-        try await pairingClient.disconnect(topic: topic)
+    public func disconnectPairing(topic: String) throws {
+        Task {
+            try await pairingClient.disconnect(topic: topic)
+        }
     }
     
     /// For a wallet and a dApp to terminate a session
@@ -165,8 +183,10 @@ public class Web3WalletClient {
     /// - When the session topic is not found
     /// - Parameters:
     ///   - topic: Session topic that you want to delete
-    public func disconnect(topic: String) async throws {
-        try await signClient.disconnect(topic: topic)
+    public func disconnect(topic: String) throws {
+        Task {
+            try await signClient.disconnect(topic: topic)
+        }
     }
 
     /// Query sessions
@@ -183,8 +203,10 @@ public class Web3WalletClient {
     /// - Parameters:
     ///   - requestId: authentication request id
     ///   - signature: CACAO signature of requested message
-    public func respond(requestId: RPCID, signature: CacaoSignature, from account: Account) async throws {
-        try await authClient.respond(requestId: requestId, signature: signature, from: account)
+    public func respond(requestId: RPCID, signature: CacaoSignature, from account: Account) throws {
+        Task {
+            try await authClient.respond(requestId: requestId, signature: signature, from: account)
+        }
     }
     
     /// Query pending requests
@@ -212,15 +234,19 @@ public class Web3WalletClient {
         try authClient.getPendingRequests()
     }
     
-    public func registerEchoClient(deviceToken: Data) async throws {
-        try await echoClient.register(deviceToken: deviceToken)
+    public func registerEchoClient(deviceToken: Data) throws {
+        Task {
+            try await echoClient.register(deviceToken: deviceToken)
+        }
     }
     
     /// Delete all stored data such as: pairings, sessions, keys
     ///
     /// - Note: Will unsubscribe from all topics
-    public func cleanup() async throws {
-        try await signClient.cleanup()
+    public func cleanup() throws {
+        Task {
+            try await signClient.cleanup()
+        }
     }
     
     public func getPairings() -> [Pairing] {
@@ -230,8 +256,10 @@ public class Web3WalletClient {
 
 #if DEBUG
 extension Web3WalletClient {
-    public func registerEchoClient(deviceToken: String) async throws {
-        try await echoClient.register(deviceToken: deviceToken)
+    public func registerEchoClient(deviceToken: String) throws {
+        Task {
+            try await echoClient.register(deviceToken: deviceToken)
+        }
     }
 }
 #endif
