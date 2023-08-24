@@ -1,7 +1,6 @@
 import Foundation
 import Combine
 
-
 public class NetworkingInteractor: NetworkInteracting {
     private var publishers = Set<AnyCancellable>()
     private let relayClient: RelayClient
@@ -20,7 +19,14 @@ public class NetworkingInteractor: NetworkInteracting {
         responsePublisherSubject.eraseToAnyPublisher()
     }
 
+    public var logsPublisher: AnyPublisher<Log, Never> {
+        logger.logsPublisher.eraseToAnyPublisher()
+    }
+
+    public var networkConnectionStatusPublisher: AnyPublisher<NetworkConnectionStatus, Never>
     public var socketConnectionStatusPublisher: AnyPublisher<SocketConnectionStatus, Never>
+    
+    private let networkMonitor: NetworkMonitoring
 
     public init(
         relayClient: RelayClient,
@@ -33,6 +39,8 @@ public class NetworkingInteractor: NetworkInteracting {
         self.rpcHistory = rpcHistory
         self.logger = logger
         self.socketConnectionStatusPublisher = relayClient.socketConnectionStatusPublisher
+        self.networkMonitor = NetworkMonitor()
+        self.networkConnectionStatusPublisher = networkMonitor.networkConnectionStatusPublisher
         setupRelaySubscribtion()
     }
 
