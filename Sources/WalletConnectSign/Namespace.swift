@@ -9,11 +9,11 @@ public enum AutoNamespacesError: Error {
 
 public struct ProposalNamespace: Equatable, Codable {
 
-    public let chains: Set<Blockchain>?
+    public let chains: OrderedSet<Blockchain>?
     public let methods: Set<String>
     public let events: Set<String>
 
-    public init(chains: Set<Blockchain>? = nil, methods: Set<String>, events: Set<String>) {
+    public init(chains: OrderedSet<Blockchain>? = nil, methods: Set<String>, events: Set<String>) {
         self.chains = chains
         self.methods = methods
         self.events = events

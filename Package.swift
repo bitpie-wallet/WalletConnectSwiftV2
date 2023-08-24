@@ -62,7 +62,7 @@ let package = Package(
     targets: [
         .target(
             name: "WalletConnectSign",
-            dependencies: ["WalletConnectPairing", "WalletConnectVerify"],
+            dependencies: ["WalletConnectPairing", "WalletConnectVerify", .product(name: "OrderedCollections", package: "swift-collections")],
             path: "Sources/WalletConnectSign"),
         .target(
             name: "WalletConnectChat",
