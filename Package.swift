@@ -60,10 +60,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.4")),
     ],
     targets: [
-        .target(name: "OrderedCollections", dependencies: [.product(name: "OrderedCollections", package: "swift-collections")]),
         .target(
             name: "WalletConnectSign",
-            dependencies: ["WalletConnectPairing", "WalletConnectVerify", "OrderedCollections"],
+            dependencies: ["WalletConnectPairing", "WalletConnectVerify", .product(name: "OrderedCollections", package: "swift-collections")],
             path: "Sources/WalletConnectSign"),
         .target(
             name: "WalletConnectChat",
